@@ -3,10 +3,9 @@ import os
 
 app = Flask(__name__)
 
-
-# =========================
+# =========================================================
 # PAGE 1
-# =========================
+# =========================================================
 
 PAGE_1 = """
 <!DOCTYPE html>
@@ -25,12 +24,10 @@ PAGE_1 = """
             margin: 0;
             min-height: 100vh;
             background:
-                radial-gradient(
-                    circle at 50% 35%,
-                    #10264b 0%,
-                    #061126 40%,
-                    #020817 80%
-                );
+                radial-gradient(circle at 50% 35%,
+                #10264b 0%,
+                #061126 40%,
+                #020817 80%);
             color: white;
             font-family: Arial, sans-serif;
         }
@@ -137,15 +134,7 @@ PAGE_1 = """
             color: #ff6868;
         }
 
-        .note {
-            margin-top: 45px;
-            text-align: center;
-            color: #6684ae;
-            font-size: 18px;
-        }
-
         @media (max-width: 800px) {
-
             .top {
                 flex-direction: column;
                 gap: 20px;
@@ -212,10 +201,6 @@ PAGE_1 = """
         <div class="error">{{ error }}</div>
     {% endif %}
 
-    <div class="note">
-        Demo interface • No guaranteed results
-    </div>
-
 </div>
 
 </body>
@@ -223,9 +208,9 @@ PAGE_1 = """
 """
 
 
-# =========================
+# =========================================================
 # PAGE 2
-# =========================
+# =========================================================
 
 PAGE_2 = """
 <!DOCTYPE html>
@@ -233,6 +218,7 @@ PAGE_2 = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SIKKIM PRO VIP</title>
 
     <style>
@@ -245,12 +231,10 @@ PAGE_2 = """
             min-height: 100vh;
 
             background:
-                radial-gradient(
-                    circle at 50% 35%,
-                    #102b55 0%,
-                    #071631 45%,
-                    #020817 85%
-                );
+                radial-gradient(circle at 50% 35%,
+                #102b55 0%,
+                #071631 45%,
+                #020817 85%);
 
             color: white;
             font-family: Arial, sans-serif;
@@ -260,8 +244,10 @@ PAGE_2 = """
             width: 100%;
             max-width: 950px;
             min-height: 100vh;
+
             margin: auto;
             padding: 55px 25px;
+
             text-align: center;
         }
 
@@ -305,6 +291,7 @@ PAGE_2 = """
         .uid-box {
             width: 85%;
             max-width: 850px;
+
             height: 105px;
 
             margin: 45px auto;
@@ -320,26 +307,26 @@ PAGE_2 = """
 
             font-size: 42px;
             font-weight: bold;
-            letter-spacing: 12px;
 
-            box-shadow:
-                0 0 20px rgba(0, 207, 255, 0.2);
+            letter-spacing: 12px;
         }
 
-        .inputs {
+        /* TWO EQUAL NUMBER BOXES */
+
+        .number-area {
             width: 85%;
-            max-width: 700px;
+            max-width: 850px;
 
             margin: auto;
 
             display: flex;
-            flex-direction: column;
+            justify-content: center;
 
             gap: 25px;
         }
 
         .number-input {
-            width: 100%;
+            width: 50%;
             height: 90px;
 
             border: 3px solid #00cfff;
@@ -348,7 +335,7 @@ PAGE_2 = """
             background: #07172b;
             color: white;
 
-            padding: 0 25px;
+            padding: 0 20px;
 
             font-size: 28px;
             font-weight: bold;
@@ -358,10 +345,6 @@ PAGE_2 = """
             outline: none;
         }
 
-        .number-input::placeholder {
-            color: #4d7da5;
-        }
-
         .number-input:focus {
             border-color: #36e7ff;
 
@@ -369,8 +352,10 @@ PAGE_2 = """
                 0 0 20px rgba(0, 220, 255, 0.35);
         }
 
+        /* CONTINUE + BACK */
+
         .bottom-buttons {
-            margin-top: 50px;
+            margin-top: 45px;
 
             display: flex;
             justify-content: center;
@@ -382,11 +367,11 @@ PAGE_2 = """
             width: 180px;
             height: 65px;
 
-            border-radius: 18px;
-
             display: flex;
             align-items: center;
             justify-content: center;
+
+            border-radius: 18px;
 
             text-decoration: none;
 
@@ -394,24 +379,24 @@ PAGE_2 = """
             font-weight: bold;
         }
 
-        .back-button {
-            border: 2px solid #00cfff;
-            background: transparent;
-            color: #00d9ff;
-        }
-
-        .connect-button {
+        .continue-button {
             background: #16c1df;
             color: #001018;
         }
 
-        .back-button:hover {
-            background: #00cfff;
-            color: #001018;
+        .back-button {
+            background: #000000;
+            color: white;
+
+            border: 2px solid #333;
         }
 
-        .connect-button:hover {
+        .continue-button:hover {
             background: #31d9f1;
+        }
+
+        .back-button:hover {
+            background: #151515;
         }
 
         @media (max-width: 600px) {
@@ -431,17 +416,19 @@ PAGE_2 = """
             .uid-box {
                 width: 95%;
                 height: 85px;
+
                 font-size: 30px;
                 letter-spacing: 8px;
             }
 
-            .inputs {
+            .number-area {
                 width: 95%;
+                gap: 12px;
             }
 
             .number-input {
                 height: 75px;
-                font-size: 24px;
+                font-size: 19px;
             }
 
             .bottom-button {
@@ -469,32 +456,40 @@ PAGE_2 = """
         5001
     </div>
 
-    <div class="inputs">
+    <!-- DIRECT NUMBER ENTRY -->
+
+    <div class="number-area">
 
         <input
             class="number-input"
             type="number"
-            placeholder="ENTER NUMBER 1"
             inputmode="numeric"
+            autocomplete="off"
         >
 
         <input
             class="number-input"
             type="number"
-            placeholder="ENTER NUMBER 2"
             inputmode="numeric"
+            autocomplete="off"
         >
 
     </div>
 
+    <!-- CONTINUE FIRST, BACK SECOND -->
+
     <div class="bottom-buttons">
 
-        <a href="/" class="bottom-button back-button">
-            BACK
+        <a
+            href="/connected"
+            class="bottom-button continue-button">
+            CONTINUE
         </a>
 
-        <a href="/connected" class="bottom-button connect-button">
-            CONNECT
+        <a
+            href="/"
+            class="bottom-button back-button">
+            BACK
         </a>
 
     </div>
@@ -506,9 +501,9 @@ PAGE_2 = """
 """
 
 
-# =========================
+# =========================================================
 # ROUTES
-# =========================
+# =========================================================
 
 @app.route("/")
 def home():
@@ -533,10 +528,14 @@ def connected():
     return render_template_string(PAGE_2)
 
 
-# =========================
-# START
-# =========================
+# =========================================================
+# START SERVER
+# =========================================================
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+
+    app.run(
+        host="0.0.0.0",
+        port=port
+    )
