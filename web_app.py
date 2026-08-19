@@ -1,176 +1,174 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, redirect, url_for, render_template_string
 
 app = Flask(__name__)
 
-HTML = """
+# PAGE 1
+PAGE1 = """
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sikkim Pro VIP</title>
-
+    <title>SIKKIM PRO VIP</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             margin: 0;
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at 50% 20%, #102344 0%, #050b1b 55%, #02050d 100%);
+            background: #020817;
             color: white;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 35px 30px;
+        .box {
+            padding: 70px 20px;
         }
 
-        .top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            font-size: 58px;
-            font-weight: 900;
+        h1 {
+            font-size: 55px;
             letter-spacing: 8px;
         }
 
-        .vip {
-            padding: 15px 30px;
-            border: 2px solid #00d9ff;
-            border-radius: 18px;
-            color: #00d9ff;
-            font-size: 22px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            box-shadow: 0 0 18px rgba(0,217,255,.35);
-        }
-
-        .period {
-            display: flex;
-            background: #050b19;
-            border: 2px solid #1a2b4a;
+        input {
+            width: 70%;
+            max-width: 600px;
+            padding: 25px;
             border-radius: 25px;
-            overflow: hidden;
+            border: 2px solid #284568;
+            background: #071225;
+            color: white;
+            font-size: 25px;
+            text-align: center;
         }
 
-        .period button {
-            border: 0;
-            padding: 20px 35px;
-            background: transparent;
-            color: #8397b8;
-            font-size: 22px;
+        button {
+            margin-top: 25px;
+            padding: 22px 60px;
+            border: none;
+            border-radius: 25px;
+            background: #16c1df;
+            color: #001018;
+            font-size: 25px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .period button.active {
-            background: #09c5e8;
-            color: #00101b;
-            box-shadow: 0 0 25px rgba(0,210,255,.55);
+        .error {
+            color: #ff5555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>SIKKIM</h1>
+
+        <form action="/connect" method="POST">
+            <input
+                type="text"
+                name="uid"
+                placeholder="ENTER SIKKIM UID"
+                required
+            >
+
+            <br>
+
+            <button type="submit">CONNECT</button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
+"""
+
+
+# PAGE 2
+PAGE2 = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Connected</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5f5f5;
+            color: #111;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
 
-        .line {
-            margin: 45px 0;
-            border-top: 2px dashed #06445c;
+        .page {
+            padding: 50px 20px;
         }
 
-        .form-row {
-            display: flex;
-            gap: 35px;
-            align-items: stretch;
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .live {
+            font-size: 24px;
+            margin-bottom: 45px;
+        }
+
+        .dot {
+            color: red;
+            font-size: 30px;
         }
 
         .uid {
-            flex: 1;
-            padding: 30px;
-            border-radius: 28px;
-            border: 3px solid #203451;
-            background: #070e20;
-            color: white;
-            font-size: 28px;
-            outline: none;
-            box-shadow: inset 0 0 30px rgba(0,0,0,.35);
+            width: 80%;
+            max-width: 800px;
+            height: 90px;
+            margin: auto;
+            background: white;
+            border: 3px solid #222;
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 40px;
+            letter-spacing: 10px;
         }
 
-        .uid::placeholder {
-            color: #29415f;
-            letter-spacing: 4px;
-        }
-
-        .connect {
-            width: 35%;
-            border: 0;
-            border-radius: 28px;
-            background: #08bddd;
-            color: #001018;
-            font-size: 30px;
-            font-weight: 900;
-            letter-spacing: 5px;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0,190,230,.35);
-        }
-
-        .connect:hover {
-            background: #19d8f5;
-        }
-
-        .result {
-            margin-top: 40px;
-            padding: 35px;
-            border-radius: 28px;
-            border: 2px solid #123b58;
-            background: rgba(5,13,30,.9);
-            text-align: center;
-            display: none;
-        }
-
-        .result h2 {
-            color: #00d9ff;
-            letter-spacing: 4px;
-        }
-
-        .result-number {
-            font-size: 55px;
-            font-weight: 900;
-            margin: 20px;
-        }
-
-        .note {
+        .buttons {
             margin-top: 35px;
-            color: #647b9b;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
         }
 
-        @media (max-width: 700px) {
-            .container {
-                padding: 25px 15px;
+        .number {
+            width: 150px;
+            height: 80px;
+            background: white;
+            border: 3px solid #222;
+            border-radius: 8px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media(max-width:600px) {
+            h1 {
+                font-size: 30px;
             }
 
-            .logo {
-                font-size: 38px;
+            .uid {
+                width: 90%;
+                font-size: 28px;
             }
 
-            .form-row {
-                flex-direction: column;
+            .buttons {
+                gap: 20px;
             }
 
-            .connect {
-                width: 100%;
-                min-height: 80px;
-            }
-
-            .period button {
-                padding: 16px 20px;
-                font-size: 17px;
+            .number {
+                width: 120px;
             }
         }
     </style>
@@ -178,109 +176,55 @@ HTML = """
 
 <body>
 
-<div class="container">
+<div class="page">
 
-    <div class="top">
+    <h1>SERVER CONNECTED</h1>
 
-        <div style="display:flex;align-items:center;gap:25px;">
-            <div class="logo">SIKKIM</div>
-            <div class="vip">PRO VIP</div>
-        </div>
-
-        <div class="period">
-            <button id="sec30" onclick="setPeriod('30 SEC')">
-                30 SEC
-            </button>
-
-            <button id="min1" class="active" onclick="setPeriod('1 MIN')">
-                1 MIN
-            </button>
-        </div>
-
+    <div class="live">
+        LIVE <span class="dot">●</span>
     </div>
 
-    <div class="line"></div>
-
-    <form class="form-row" onsubmit="showPrediction(event)">
-
-        <input
-            id="uid"
-            class="uid"
-            type="text"
-            placeholder="ENTER SIKKIM UID"
-            required
-        >
-
-        <button class="connect" type="submit">
-            CONNECT
-        </button>
-
-    </form>
-
-    <div class="result" id="result">
-
-        <h2>PREDICTION RESULT</h2>
-
-        <div class="result-number" id="resultText">
-            DEMO
-        </div>
-
-        <p id="periodText">1 MIN MODE</p>
-
+    <div class="uid">
+        5001
     </div>
 
-    <div class="note">
-        Demo prediction interface • No guaranteed results
+    <div class="buttons">
+        <button class="number">N1</button>
+        <button class="number">N2</button>
     </div>
 
 </div>
-
-<script>
-
-let selectedPeriod = "1 MIN";
-
-function setPeriod(period) {
-
-    selectedPeriod = period;
-
-    document.getElementById("sec30").classList.remove("active");
-    document.getElementById("min1").classList.remove("active");
-
-    if (period === "30 SEC") {
-        document.getElementById("sec30").classList.add("active");
-    } else {
-        document.getElementById("min1").classList.add("active");
-    }
-}
-
-function showPrediction(event) {
-
-    event.preventDefault();
-
-    const uid = document.getElementById("uid").value.trim();
-
-    if (!uid) {
-        return;
-    }
-
-    document.getElementById("result").style.display = "block";
-
-    document.getElementById("resultText").innerText = "DEMO";
-
-    document.getElementById("periodText").innerText =
-        selectedPeriod + " MODE";
-
-}
-
-</script>
 
 </body>
 </html>
 """
 
+
 @app.route("/")
 def home():
-    return render_template_string(HTML)
+    return render_template_string(PAGE1)
+
+
+@app.route("/connect", methods=["POST"])
+def connect():
+    uid = request.form.get("uid", "").strip()
+
+    if uid == "5001":
+        return redirect(url_for("connected"))
+
+    return render_template_string(
+        PAGE1,
+        error="Invalid UID"
+    )
+
+
+@app.route("/connected")
+def connected():
+    return render_template_string(PAGE2)
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(
+        host="0.0.0.0",
+        port=5000
+    )
