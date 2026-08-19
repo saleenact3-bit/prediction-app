@@ -1,246 +1,542 @@
-PAGE_2 = """
+from flask import Flask, request, redirect, url_for, render_template_string
+import os
+
+app = Flask(__name__)
+
+
+# =========================
+# PAGE 1
+# =========================
+
+PAGE_1 = """
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIKKIM PRO VIP</title>
 
-<title>SIKKIM PRO VIP</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 50% 35%,
+                    #10264b 0%,
+                    #061126 40%,
+                    #020817 80%
+                );
+            color: white;
+            font-family: Arial, sans-serif;
+        }
 
-*{
-box-sizing:border-box;
-}
+        .main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 55px 30px;
+        }
 
-body{
-margin:0;
-min-height:100vh;
-font-family:Arial,Helvetica,sans-serif;
-color:white;
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 45px;
+        }
 
-background:
-radial-gradient(circle at 50% 30%,#12325f,#07172e 45%,#020817 90%);
-}
+        .logo {
+            font-size: 58px;
+            font-weight: 900;
+            letter-spacing: 9px;
+        }
 
-.page{
-max-width:900px;
-margin:auto;
-padding:50px 25px;
-text-align:center;
-}
+        .vip {
+            padding: 18px 40px;
+            border: 2px solid #00d9ff;
+            border-radius: 25px;
+            color: #00d9ff;
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 4px;
+        }
 
-.server{
-font-size:42px;
-font-weight:900;
-letter-spacing:3px;
-}
+        .timer {
+            margin-top: 55px;
+            width: 360px;
+            height: 85px;
+            display: flex;
+            border: 2px solid #203b63;
+            border-radius: 30px;
+            overflow: hidden;
+            background: #050e20;
+        }
 
-.live{
-margin-top:12px;
-font-size:24px;
-font-weight:bold;
-}
+        .timer button {
+            width: 50%;
+            border: none;
+            color: #91a6c9;
+            background: transparent;
+            font-size: 23px;
+            font-weight: bold;
+        }
 
-.dot{
-color:red;
-font-size:28px;
-animation:blink 1s infinite;
-text-shadow:0 0 12px red;
-}
+        .timer .active {
+            background: #16c1df;
+            color: #001018;
+        }
 
-@keyframes blink{
+        .line {
+            margin-top: 60px;
+            border-top: 2px dashed #08718a;
+        }
 
-0%{opacity:1;}
+        .connect-area {
+            margin-top: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 45px;
+        }
 
-50%{opacity:.15;}
+        .uid-input {
+            width: 560px;
+            height: 125px;
+            border-radius: 38px;
+            border: 3px solid #29466d;
+            background: #040d1e;
+            color: white;
+            padding: 0 40px;
+            font-size: 27px;
+            outline: none;
+        }
 
-100%{opacity:1;}
+        .uid-input::placeholder {
+            color: #35567f;
+        }
 
-}
+        .connect-btn {
+            width: 325px;
+            height: 125px;
+            border: none;
+            border-radius: 38px;
+            background: #16c1df;
+            color: #001018;
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            cursor: pointer;
+        }
 
-.uid{
-width:85%;
-height:100px;
-margin:40px auto;
+        .error {
+            margin-top: 25px;
+            text-align: center;
+            color: #ff6868;
+        }
 
-border:3px solid #00cfff;
-border-radius:22px;
+        .note {
+            margin-top: 45px;
+            text-align: center;
+            color: #6684ae;
+            font-size: 18px;
+        }
 
-display:flex;
-align-items:center;
-justify-content:center;
+        @media (max-width: 800px) {
 
-font-size:38px;
-font-weight:bold;
-letter-spacing:10px;
+            .top {
+                flex-direction: column;
+                gap: 20px;
+            }
 
-background:#061426;
-box-shadow:0 0 20px rgba(0,200,255,.2);
-}
+            .logo {
+                font-size: 42px;
+            }
 
-.inputs{
-display:flex;
-flex-direction:column;
-gap:25px;
-align-items:center;
-}
+            .connect-area {
+                flex-direction: column;
+            }
 
-.numberbox{
-width:85%;
-max-width:700px;
-height:90px;
+            .uid-input,
+            .connect-btn {
+                width: 100%;
+                height: 105px;
+            }
 
-border:3px solid #00cfff;
-border-radius:20px;
-
-background:#07172b;
-
-color:white;
-
-font-size:30px;
-font-weight:bold;
-
-text-align:center;
-
-outline:none;
-
-letter-spacing:3px;
-}
-
-.numberbox::placeholder{
-color:#4d7da5;
-}
-
-.numberbox:focus{
-border-color:#36e7ff;
-box-shadow:0 0 20px rgba(0,220,255,.35);
-}
-
-.bottom{
-margin-top:45px;
-
-display:flex;
-justify-content:center;
-gap:25px;
-}
-
-.btn{
-width:180px;
-height:65px;
-
-border-radius:18px;
-
-font-size:22px;
-font-weight:bold;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-text-decoration:none;
-
-cursor:pointer;
-}
-
-.back{
-border:2px solid #00cfff;
-color:#00d9ff;
-background:transparent;
-}
-
-.connect{
-border:none;
-background:#18c7e6;
-color:#001018;
-}
-
-.back:hover{
-background:#00cfff;
-color:#001018;
-}
-
-.connect:hover{
-background:#35d9f2;
-}
-
-@media(max-width:600px){
-
-.server{
-font-size:30px;
-}
-
-.uid{
-width:95%;
-font-size:28px;
-height:85px;
-}
-
-.numberbox{
-width:95%;
-height:75px;
-font-size:24px;
-}
-
-.btn{
-width:140px;
-height:58px;
-font-size:18px;
-}
-
-}
-
-</style>
+            .timer {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="page">
+<div class="main">
 
-<div class="server">
-SERVER CONNECTED
-</div>
+    <div class="top">
+        <div class="logo">SIKKIM</div>
+        <div class="vip">PRO VIP</div>
+    </div>
 
-<div class="live">
-LIVE <span class="dot">●</span>
-</div>
+    <div class="timer">
+        <button type="button">30 SEC</button>
+        <button type="button" class="active">1 MIN</button>
+    </div>
 
-<div class="uid">
-5001
-</div>
+    <div class="line"></div>
 
-<div class="inputs">
+    <form action="/connect" method="POST">
 
-<input
-class="numberbox"
-type="number"
-placeholder="ENTER NUMBER 1"
-inputmode="numeric"
->
+        <div class="connect-area">
 
-<input
-class="numberbox"
-type="number"
-placeholder="ENTER NUMBER 2"
-inputmode="numeric"
->
+            <input
+                class="uid-input"
+                type="text"
+                name="uid"
+                placeholder="ENTER SIKKIM UID"
+                required
+            >
 
-</div>
+            <button class="connect-btn" type="submit">
+                CONNECT
+            </button>
 
-<div class="bottom">
+        </div>
 
-<a href="/" class="btn back">
-BACK
-</a>
+    </form>
 
-<a href="/connected" class="btn connect">
-CONNECT
-</a>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
 
-</div>
+    <div class="note">
+        Demo interface • No guaranteed results
+    </div>
 
 </div>
 
 </body>
 </html>
 """
+
+
+# =========================
+# PAGE 2
+# =========================
+
+PAGE_2 = """
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIKKIM PRO VIP</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 50% 35%,
+                    #102b55 0%,
+                    #071631 45%,
+                    #020817 85%
+                );
+
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 950px;
+            min-height: 100vh;
+            margin: auto;
+            padding: 55px 25px;
+            text-align: center;
+        }
+
+        .server-title {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+
+        .live {
+            margin-top: 12px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .live-dot {
+            color: red;
+            font-size: 30px;
+
+            animation: blink 1s infinite;
+
+            text-shadow:
+                0 0 8px red,
+                0 0 18px red;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.15;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .uid-box {
+            width: 85%;
+            max-width: 850px;
+            height: 105px;
+
+            margin: 45px auto;
+
+            border: 3px solid #00cfff;
+            border-radius: 20px;
+
+            background: #061426;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 12px;
+
+            box-shadow:
+                0 0 20px rgba(0, 207, 255, 0.2);
+        }
+
+        .inputs {
+            width: 85%;
+            max-width: 700px;
+
+            margin: auto;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 25px;
+        }
+
+        .number-input {
+            width: 100%;
+            height: 90px;
+
+            border: 3px solid #00cfff;
+            border-radius: 20px;
+
+            background: #07172b;
+            color: white;
+
+            padding: 0 25px;
+
+            font-size: 28px;
+            font-weight: bold;
+
+            text-align: center;
+
+            outline: none;
+        }
+
+        .number-input::placeholder {
+            color: #4d7da5;
+        }
+
+        .number-input:focus {
+            border-color: #36e7ff;
+
+            box-shadow:
+                0 0 20px rgba(0, 220, 255, 0.35);
+        }
+
+        .bottom-buttons {
+            margin-top: 50px;
+
+            display: flex;
+            justify-content: center;
+
+            gap: 25px;
+        }
+
+        .bottom-button {
+            width: 180px;
+            height: 65px;
+
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-decoration: none;
+
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .back-button {
+            border: 2px solid #00cfff;
+            background: transparent;
+            color: #00d9ff;
+        }
+
+        .connect-button {
+            background: #16c1df;
+            color: #001018;
+        }
+
+        .back-button:hover {
+            background: #00cfff;
+            color: #001018;
+        }
+
+        .connect-button:hover {
+            background: #31d9f1;
+        }
+
+        @media (max-width: 600px) {
+
+            .page {
+                padding: 40px 18px;
+            }
+
+            .server-title {
+                font-size: 29px;
+            }
+
+            .live {
+                font-size: 21px;
+            }
+
+            .uid-box {
+                width: 95%;
+                height: 85px;
+                font-size: 30px;
+                letter-spacing: 8px;
+            }
+
+            .inputs {
+                width: 95%;
+            }
+
+            .number-input {
+                height: 75px;
+                font-size: 24px;
+            }
+
+            .bottom-button {
+                width: 145px;
+                height: 60px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="server-title">
+        SERVER CONNECTED
+    </div>
+
+    <div class="live">
+        LIVE <span class="live-dot">●</span>
+    </div>
+
+    <div class="uid-box">
+        5001
+    </div>
+
+    <div class="inputs">
+
+        <input
+            class="number-input"
+            type="number"
+            placeholder="ENTER NUMBER 1"
+            inputmode="numeric"
+        >
+
+        <input
+            class="number-input"
+            type="number"
+            placeholder="ENTER NUMBER 2"
+            inputmode="numeric"
+        >
+
+    </div>
+
+    <div class="bottom-buttons">
+
+        <a href="/" class="bottom-button back-button">
+            BACK
+        </a>
+
+        <a href="/connected" class="bottom-button connect-button">
+            CONNECT
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+"""
+
+
+# =========================
+# ROUTES
+# =========================
+
+@app.route("/")
+def home():
+    return render_template_string(PAGE_1)
+
+
+@app.route("/connect", methods=["POST"])
+def connect():
+    uid = request.form.get("uid", "").strip()
+
+    if uid == "5001":
+        return redirect(url_for("connected"))
+
+    return render_template_string(
+        PAGE_1,
+        error="Invalid UID. Please enter 5001."
+    )
+
+
+@app.route("/connected")
+def connected():
+    return render_template_string(PAGE_2)
+
+
+# =========================
+# START
+# =========================
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
