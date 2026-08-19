@@ -3,6 +3,7 @@ import os
 
 app = Flask(__name__)
 
+
 # =========================================================
 # PAGE 1
 # =========================================================
@@ -24,10 +25,12 @@ PAGE_1 = """
             margin: 0;
             min-height: 100vh;
             background:
-                radial-gradient(circle at 50% 35%,
-                #10264b 0%,
-                #061126 40%,
-                #020817 80%);
+                radial-gradient(
+                    circle at 50% 35%,
+                    #10264b 0%,
+                    #061126 40%,
+                    #020817 80%
+                );
             color: white;
             font-family: Arial, sans-serif;
         }
@@ -231,10 +234,12 @@ PAGE_2 = """
             min-height: 100vh;
 
             background:
-                radial-gradient(circle at 50% 35%,
-                #102b55 0%,
-                #071631 45%,
-                #020817 85%);
+                radial-gradient(
+                    circle at 50% 35%,
+                    #102b55 0%,
+                    #071631 45%,
+                    #020817 85%
+                );
 
             color: white;
             font-family: Arial, sans-serif;
@@ -311,7 +316,7 @@ PAGE_2 = """
             letter-spacing: 12px;
         }
 
-        /* TWO EQUAL NUMBER BOXES */
+        /* N1 + N2 */
 
         .number-area {
             width: 85%;
@@ -321,6 +326,7 @@ PAGE_2 = """
 
             display: flex;
             justify-content: center;
+            align-items: center;
 
             gap: 25px;
         }
@@ -343,6 +349,11 @@ PAGE_2 = """
             text-align: center;
 
             outline: none;
+        }
+
+        .number-input::placeholder {
+            color: #4d7da5;
+            opacity: 1;
         }
 
         .number-input:focus {
@@ -388,7 +399,7 @@ PAGE_2 = """
             background: #000000;
             color: white;
 
-            border: 2px solid #333;
+            border: 2px solid #333333;
         }
 
         .continue-button:hover {
@@ -398,6 +409,8 @@ PAGE_2 = """
         .back-button:hover {
             background: #151515;
         }
+
+        /* MOBILE */
 
         @media (max-width: 600px) {
 
@@ -427,6 +440,7 @@ PAGE_2 = """
             }
 
             .number-input {
+                width: 50%;
                 height: 75px;
                 font-size: 19px;
             }
@@ -456,13 +470,14 @@ PAGE_2 = """
         5001
     </div>
 
-    <!-- DIRECT NUMBER ENTRY -->
+    <!-- N1 AND N2 -->
 
     <div class="number-area">
 
         <input
             class="number-input"
             type="number"
+            placeholder="N1"
             inputmode="numeric"
             autocomplete="off"
         >
@@ -470,13 +485,14 @@ PAGE_2 = """
         <input
             class="number-input"
             type="number"
+            placeholder="N2"
             inputmode="numeric"
             autocomplete="off"
         >
 
     </div>
 
-    <!-- CONTINUE FIRST, BACK SECOND -->
+    <!-- CONTINUE + BACK -->
 
     <div class="bottom-buttons">
 
@@ -529,7 +545,7 @@ def connected():
 
 
 # =========================================================
-# START SERVER
+# RUN
 # =========================================================
 
 if __name__ == "__main__":
