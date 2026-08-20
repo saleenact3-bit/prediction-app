@@ -271,9 +271,9 @@ body {
 
     {% if error %}
 
-        <div class="error">
-            {{ error }}
-        </div>
+    <div class="error">
+        {{ error }}
+    </div>
 
     {% endif %}
 
@@ -345,7 +345,6 @@ PAGE_2 = """
 body {
 
     margin: 0;
-
     min-height: 100vh;
 
     background:
@@ -357,7 +356,6 @@ body {
         );
 
     color: white;
-
     font-family: Arial, sans-serif;
 }
 
@@ -365,11 +363,9 @@ body {
 .page {
 
     max-width: 950px;
-
     min-height: 100vh;
 
     margin: auto;
-
     padding: 55px 25px;
 
     text-align: center;
@@ -379,7 +375,6 @@ body {
 .server-title {
 
     font-size: 42px;
-
     font-weight: 900;
 
     letter-spacing: 3px;
@@ -395,7 +390,6 @@ body {
     display: flex;
 
     justify-content: center;
-
     align-items: center;
 
     gap: 30px;
@@ -405,7 +399,6 @@ body {
 .live {
 
     font-size: 23px;
-
     font-weight: bold;
 }
 
@@ -462,12 +455,11 @@ body {
 }
 
 
-/* PERIOD NUMBER */
+/* PERIOD BOX */
 
 .period-box {
 
     width: 85%;
-
     max-width: 850px;
 
     height: 110px;
@@ -521,7 +513,6 @@ body {
 .number-area {
 
     width: 85%;
-
     max-width: 850px;
 
     margin: auto;
@@ -535,7 +526,6 @@ body {
 .number-input {
 
     width: 50%;
-
     height: 90px;
 
     border: 3px solid #00cfff;
@@ -562,7 +552,7 @@ body {
 }
 
 
-/* CONNECT + BACK */
+/* BUTTONS */
 
 .bottom-buttons {
 
@@ -579,13 +569,11 @@ body {
 .bottom-button {
 
     width: 180px;
-
     height: 65px;
 
     display: flex;
 
     justify-content: center;
-
     align-items: center;
 
     border-radius: 18px;
@@ -646,12 +634,6 @@ body {
         font-size: 20px;
     }
 
-    .bottom-button {
-        width: 145px;
-        height: 60px;
-        font-size: 18px;
-    }
-
 }
 
 </style>
@@ -660,7 +642,6 @@ body {
 
 
 <body>
-
 
 <div class="page">
 
@@ -766,16 +747,35 @@ body {
 
 <script>
 
+/*
+    1 MIN = 60 seconds
+    30 SEC = 30 seconds
+*/
+
 const ROUND_SECONDS =
     {{ selected_time }};
 
+
+/*
+    Server-ൽ കിട്ടിയ
+    ഇപ്പോഴത്തെ Period Number.
+*/
 
 let currentPeriod =
     "{{ period_number }}";
 
 
+/*
+    ആദ്യ round ID.
+*/
+
 let lastRoundId = null;
 
+
+/*
+    Period Number-ന്റെ
+    അവസാന 5 digits മാത്രം +1.
+*/
 
 function getNextPeriod(period) {
 
@@ -788,33 +788,57 @@ function getNextPeriod(period) {
             10
         );
 
+
     const nextFive =
         String(
             lastFive + 1
         ).padStart(5, "0");
 
+
     return prefix + nextFive;
 }
 
+
+/*
+    Countdown + Period update.
+*/
 
 function updatePage() {
 
     const now =
         Date.now();
 
+
     const roundLength =
         ROUND_SECONDS * 1000;
+
+
+    /*
+        ഇപ്പോഴത്തെ round.
+    */
 
     const roundId =
         Math.floor(
             now / roundLength
         );
 
+
+    /*
+        അടുത്ത round.
+    */
+
     const nextRound =
         (roundId + 1) * roundLength;
 
+
+    /*
+        അടുത്ത Period വരാൻ
+        ബാക്കിയുള്ള milliseconds.
+    */
+
     const remainingMs =
         nextRound - now;
+
 
     let remainingSeconds =
         Math.ceil(
@@ -832,6 +856,7 @@ function updatePage() {
             remainingSeconds / 60
         );
 
+
     const seconds =
         remainingSeconds % 60;
 
@@ -846,6 +871,11 @@ function updatePage() {
         "remainingTime"
     ).textContent = timeText;
 
+
+    /*
+        ഒരു round കഴിഞ്ഞാൽ
+        Period Number +1.
+    */
 
     if (
         lastRoundId !== null &&
@@ -870,8 +900,18 @@ function updatePage() {
 }
 
 
+/*
+    Page തുറക്കുമ്പോൾ
+    ഉടൻ countdown തുടങ്ങും.
+*/
+
 updatePage();
 
+
+/*
+    Refresh ആവശ്യമില്ല.
+    Browser തന്നെ update ചെയ്യും.
+*/
 
 setInterval(
     updatePage,
@@ -887,15 +927,19 @@ setInterval(
 
 
 # =========================================================
-# PERIOD NUMBER
+# CREATE PERIOD NUMBER
 # =========================================================
 
 def get_period_number(seconds):
 
     now = datetime.now()
 
+
+    # ഇന്നത്തെ date
     date_part = now.strftime("%Y%m%d")
 
+
+    # ഇന്നത്തെ ദിവസം തുടങ്ങിയത്
     midnight = now.replace(
         hour=0,
         minute=0,
@@ -903,27 +947,37 @@ def get_period_number(seconds):
         microsecond=0
     )
 
+
+    # കഴിഞ്ഞ seconds
     elapsed_seconds = int(
         (now - midnight).total_seconds()
     )
 
+
+    # ഓരോ 1 minute-നും ഒരു period
     round_number = (
         elapsed_seconds // seconds
     )
 
+
+    # അവസാനത്തെ 5 digits
     last_five = (
         round_number % 100000
     )
+
 
     last_five_text = str(
         last_five
     ).zfill(5)
 
+
+    # Final Period Number
     period_number = (
         date_part
         + "1000"
         + last_five_text
     )
+
 
     return period_number
 
@@ -955,13 +1009,14 @@ def connect():
         ""
     ).strip()
 
+
     selected_time = request.form.get(
         "time",
         "60"
     )
 
 
-    # Demo key for this interface
+    # Demo key
     if key == "5001":
 
         return redirect(
