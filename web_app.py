@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template_string
+from datetime import datetime
 import os
 
 app = Flask(__name__)
@@ -12,165 +13,182 @@ PAGE_1 = """
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SIKKIM PRO VIP</title>
+<title>SIKKIM PRO VIP</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background:
-                radial-gradient(
-                    circle at 50% 35%,
-                    #10264b 0%,
-                    #061126 40%,
-                    #020817 80%
-                );
-            color: white;
-            font-family: Arial, sans-serif;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .main {
-            max-width: 1000px;
-            margin: auto;
-            padding: 55px 30px;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
 
-        .top {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 45px;
-        }
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #10264b 0%,
+            #061126 45%,
+            #020817 85%
+        );
 
-        .logo {
-            font-size: 58px;
-            font-weight: 900;
-            letter-spacing: 9px;
-        }
+    color: white;
+    font-family: Arial, sans-serif;
+}
 
-        .vip {
-            padding: 18px 40px;
-            border: 2px solid #00d9ff;
-            border-radius: 25px;
-            color: #00d9ff;
-            font-size: 25px;
-            font-weight: bold;
-            letter-spacing: 4px;
-        }
+.main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 55px 30px;
+}
 
-        .timer {
-            margin: 55px auto 0;
-            width: 360px;
-            height: 85px;
-            display: flex;
-            border: 2px solid #203b63;
-            border-radius: 30px;
-            overflow: hidden;
-            background: #050e20;
-        }
+.top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 45px;
+}
 
-        .timer button {
-            width: 50%;
-            height: 100%;
-            border: none;
-            color: #91a6c9;
-            background: transparent;
-            font-size: 23px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.logo {
+    font-size: 58px;
+    font-weight: 900;
+    letter-spacing: 9px;
+}
 
-        .timer button:hover {
-            background: #0b2443;
-            color: white;
-        }
+.vip {
+    padding: 18px 40px;
+    border: 2px solid #00d9ff;
+    border-radius: 25px;
 
-        .timer button.active {
-            background: #16c1df;
-            color: #001018;
-        }
+    color: #00d9ff;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
 
-        .line {
-            margin-top: 60px;
-            border-top: 2px dashed #08718a;
-        }
+.timer {
+    margin: 55px auto 0;
 
-        .connect-area {
-            margin-top: 58px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 45px;
-        }
+    width: 360px;
+    height: 85px;
 
-        .uid-input {
-            width: 560px;
-            height: 125px;
-            border-radius: 38px;
-            border: 3px solid #29466d;
-            background: #040d1e;
-            color: white;
-            padding: 0 40px;
-            font-size: 27px;
-            outline: none;
-        }
+    display: flex;
 
-        .uid-input::placeholder {
-            color: #35567f;
-        }
+    border: 2px solid #203b63;
+    border-radius: 30px;
 
-        .connect-btn {
-            width: 325px;
-            height: 125px;
-            border: none;
-            border-radius: 38px;
-            background: #16c1df;
-            color: #001018;
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: 5px;
-            cursor: pointer;
-        }
+    overflow: hidden;
+    background: #050e20;
+}
 
-        .error {
-            margin-top: 25px;
-            text-align: center;
-            color: #ff6868;
-        }
+.timer button {
+    width: 50%;
+    border: none;
 
-        @media (max-width: 800px) {
+    background: transparent;
+    color: #91a6c9;
 
-            .top {
-                flex-direction: column;
-                gap: 20px;
-            }
+    font-size: 23px;
+    font-weight: bold;
 
-            .logo {
-                font-size: 42px;
-            }
+    cursor: pointer;
+}
 
-            .connect-area {
-                flex-direction: column;
-            }
+.timer button.active {
+    background: #16c1df;
+    color: #001018;
+}
 
-            .uid-input,
-            .connect-btn {
-                width: 100%;
-                height: 105px;
-            }
+.line {
+    margin-top: 60px;
+    border-top: 2px dashed #08718a;
+}
 
-            .timer {
-                width: 100%;
-            }
-        }
-    </style>
+.connect-area {
+    margin-top: 58px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 45px;
+}
+
+.uid-input {
+    width: 560px;
+    height: 125px;
+
+    border-radius: 38px;
+    border: 3px solid #29466d;
+
+    background: #040d1e;
+    color: white;
+
+    padding: 0 40px;
+
+    font-size: 27px;
+    outline: none;
+}
+
+.uid-input::placeholder {
+    color: #35567f;
+}
+
+.connect-btn {
+    width: 325px;
+    height: 125px;
+
+    border: none;
+    border-radius: 38px;
+
+    background: #16c1df;
+    color: #001018;
+
+    font-size: 32px;
+    font-weight: 900;
+
+    letter-spacing: 5px;
+
+    cursor: pointer;
+}
+
+.error {
+    margin-top: 25px;
+    text-align: center;
+    color: #ff6868;
+}
+
+@media (max-width: 800px) {
+
+    .top {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .logo {
+        font-size: 42px;
+    }
+
+    .connect-area {
+        flex-direction: column;
+    }
+
+    .uid-input,
+    .connect-btn {
+        width: 100%;
+        height: 105px;
+    }
+
+    .timer {
+        width: 100%;
+    }
+}
+
+</style>
 </head>
 
 <body>
@@ -190,7 +208,7 @@ PAGE_1 = """
     </div>
 
 
-    <!-- 30 SEC / 1 MIN -->
+    <!-- TIME SELECT -->
 
     <div class="timer">
 
@@ -248,9 +266,11 @@ PAGE_1 = """
 
 
     {% if error %}
-        <div class="error">
-            {{ error }}
-        </div>
+
+    <div class="error">
+        {{ error }}
+    </div>
+
     {% endif %}
 
 </div>
@@ -271,6 +291,7 @@ function selectTime(seconds) {
 
     selected.value = seconds;
 
+
     if (seconds === 30) {
 
         thirty.classList.add("active");
@@ -282,6 +303,7 @@ function selectTime(seconds) {
         thirty.classList.remove("active");
 
     }
+
 }
 
 </script>
@@ -298,350 +320,295 @@ function selectTime(seconds) {
 PAGE_2 = """
 <!DOCTYPE html>
 <html>
+
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-    <title>SIKKIM PRO VIP</title>
+<title>SERVER CONNECTED</title>
 
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        body {
+body {
 
-            margin: 0;
+    margin: 0;
 
-            min-height: 100vh;
+    min-height: 100vh;
 
-            background:
-                radial-gradient(
-                    circle at 50% 35%,
-                    #102b55 0%,
-                    #071631 45%,
-                    #020817 85%
-                );
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #102b55 0%,
+            #071631 45%,
+            #020817 85%
+        );
 
-            color: white;
+    color: white;
 
-            font-family: Arial, sans-serif;
-        }
+    font-family: Arial, sans-serif;
+}
 
 
-        .page {
+.page {
 
-            width: 100%;
+    max-width: 950px;
 
-            max-width: 950px;
+    min-height: 100vh;
 
-            min-height: 100vh;
+    margin: auto;
 
-            margin: auto;
+    padding: 55px 25px;
 
-            padding: 55px 25px;
+    text-align: center;
+}
 
-            text-align: center;
-        }
 
+.server-title {
 
-        .server-title {
+    font-size: 42px;
 
-            font-size: 42px;
+    font-weight: 900;
 
-            font-weight: 900;
+    letter-spacing: 3px;
+}
 
-            letter-spacing: 3px;
-        }
 
+.live {
 
-        .live {
+    margin-top: 12px;
 
-            margin-top: 12px;
+    font-size: 24px;
 
-            font-size: 24px;
+    font-weight: bold;
+}
 
-            font-weight: bold;
-        }
 
+.live-dot {
 
-        .live-dot {
+    color: red;
 
-            color: red;
+    font-size: 30px;
 
-            font-size: 30px;
+    animation: blink 1s infinite;
 
-            animation: blink 1s infinite;
+    text-shadow:
+        0 0 8px red,
+        0 0 18px red;
+}
 
-            text-shadow:
-                0 0 8px red,
-                0 0 18px red;
-        }
 
+@keyframes blink {
 
-        @keyframes blink {
+    0% {
+        opacity: 1;
+    }
 
-            0% {
-                opacity: 1;
-            }
+    50% {
+        opacity: 0.15;
+    }
 
-            50% {
-                opacity: 0.15;
-            }
+    100% {
+        opacity: 1;
+    }
+}
 
-            100% {
-                opacity: 1;
-            }
-        }
 
+/* PERIOD NUMBER */
 
-        /* PERIOD NUMBER BOX */
+.period-box {
 
-        .period-box {
+    width: 85%;
+    max-width: 850px;
 
-            width: 85%;
+    height: 110px;
 
-            max-width: 850px;
+    margin: 45px auto;
 
-            height: 105px;
+    border: 3px solid #00cfff;
 
-            margin: 45px auto;
+    border-radius: 20px;
 
-            border: 3px solid #00cfff;
+    background: #061426;
 
-            border-radius: 20px;
+    display: flex;
 
-            background: #061426;
+    flex-direction: column;
 
-            display: flex;
+    align-items: center;
 
-            flex-direction: column;
+    justify-content: center;
+}
 
-            align-items: center;
 
-            justify-content: center;
-        }
+.period-title {
 
+    font-size: 15px;
 
-        .period-title {
+    color: #6e9bc5;
 
-            font-size: 16px;
+    margin-bottom: 7px;
 
-            color: #6e9bc5;
+    letter-spacing: 3px;
 
-            margin-bottom: 8px;
+    font-weight: bold;
+}
 
-            letter-spacing: 2px;
 
-            font-weight: bold;
-        }
+.period-number {
 
+    font-size: 36px;
 
-        .period-number {
+    font-weight: bold;
 
-            font-size: 38px;
+    letter-spacing: 7px;
 
-            font-weight: bold;
+    color: white;
+}
 
-            letter-spacing: 8px;
 
-            color: white;
-        }
+/* N1 N2 */
 
+.number-area {
 
-        /* N1 + N2 */
+    width: 85%;
+    max-width: 850px;
 
-        .number-area {
+    margin: auto;
 
-            width: 85%;
+    display: flex;
 
-            max-width: 850px;
+    gap: 25px;
+}
 
-            margin: auto;
 
-            display: flex;
+.number-input {
 
-            justify-content: center;
+    width: 50%;
 
-            align-items: center;
+    height: 90px;
 
-            gap: 25px;
-        }
+    border: 3px solid #00cfff;
 
+    border-radius: 20px;
 
-        .number-input {
+    background: #07172b;
 
-            width: 50%;
+    color: white;
 
-            height: 90px;
+    font-size: 28px;
 
-            border: 3px solid #00cfff;
+    font-weight: bold;
 
-            border-radius: 20px;
+    text-align: center;
 
-            background: #07172b;
+    outline: none;
+}
 
-            color: white;
 
-            padding: 0 20px;
+.number-input::placeholder {
 
-            font-size: 28px;
+    color: #4d7da5;
 
-            font-weight: bold;
+}
 
-            text-align: center;
 
-            outline: none;
-        }
+/* BUTTONS */
 
+.bottom-buttons {
 
-        .number-input::placeholder {
+    margin-top: 45px;
 
-            color: #4d7da5;
+    display: flex;
 
-            opacity: 1;
-        }
+    justify-content: center;
 
+    gap: 25px;
+}
 
-        .number-input:focus {
 
-            border-color: #36e7ff;
+.bottom-button {
 
-            box-shadow:
-                0 0 20px rgba(0, 220, 255, 0.35);
-        }
+    width: 180px;
 
+    height: 65px;
 
-        /* CONNECT + BACK */
+    display: flex;
 
-        .bottom-buttons {
+    justify-content: center;
 
-            margin-top: 45px;
+    align-items: center;
 
-            display: flex;
+    border-radius: 18px;
 
-            justify-content: center;
+    text-decoration: none;
 
-            gap: 25px;
-        }
+    font-size: 21px;
 
+    font-weight: bold;
+}
 
-        .bottom-button {
 
-            width: 180px;
+.connect-button {
 
-            height: 65px;
+    background: #16c1df;
 
-            display: flex;
+    color: #001018;
+}
 
-            align-items: center;
 
-            justify-content: center;
+.back-button {
 
-            border-radius: 18px;
+    background: #000000;
 
-            text-decoration: none;
+    color: white;
 
-            font-size: 21px;
+    border: 2px solid #333333;
+}
 
-            font-weight: bold;
-        }
 
+@media (max-width: 600px) {
 
-        .connect-button {
+    .server-title {
+        font-size: 29px;
+    }
 
-            background: #16c1df;
+    .period-box {
+        width: 95%;
+    }
 
-            color: #001018;
-        }
+    .period-number {
 
+        font-size: 24px;
 
-        .back-button {
+        letter-spacing: 4px;
+    }
 
-            background: #000000;
+    .number-area {
 
-            color: white;
+        width: 95%;
 
-            border: 2px solid #333333;
-        }
+        gap: 12px;
+    }
 
+    .number-input {
 
-        .connect-button:hover {
+        height: 75px;
 
-            background: #31d9f1;
-        }
+        font-size: 20px;
+    }
 
+}
 
-        .back-button:hover {
-
-            background: #151515;
-        }
-
-
-        @media (max-width: 600px) {
-
-            .page {
-
-                padding: 40px 18px;
-            }
-
-            .server-title {
-
-                font-size: 29px;
-            }
-
-            .live {
-
-                font-size: 21px;
-            }
-
-            .period-box {
-
-                width: 95%;
-
-                height: 95px;
-            }
-
-            .period-number {
-
-                font-size: 25px;
-
-                letter-spacing: 5px;
-            }
-
-            .number-area {
-
-                width: 95%;
-
-                gap: 12px;
-            }
-
-            .number-input {
-
-                width: 50%;
-
-                height: 75px;
-
-                font-size: 19px;
-            }
-
-            .bottom-button {
-
-                width: 145px;
-
-                height: 60px;
-
-                font-size: 18px;
-            }
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -676,16 +643,14 @@ PAGE_2 = """
             PERIOD NUMBER
         </div>
 
-        <div
-            class="period-number"
-            id="periodNumber">
-            20260820100010804
+        <div class="period-number">
+            {{ period_number }}
         </div>
 
     </div>
 
 
-    <!-- N1 + N2 -->
+    <!-- N1 / N2 -->
 
     <div class="number-area">
 
@@ -693,27 +658,23 @@ PAGE_2 = """
             class="number-input"
             type="number"
             placeholder="N1"
-            inputmode="numeric"
-            autocomplete="off"
         >
 
         <input
             class="number-input"
             type="number"
             placeholder="N2"
-            inputmode="numeric"
-            autocomplete="off"
         >
 
     </div>
 
 
-    <!-- CONNECT + BACK -->
+    <!-- CONNECT / BACK -->
 
     <div class="bottom-buttons">
 
         <a
-            href="/connected"
+            href="/connected?time={{ selected_time }}"
             class="bottom-button connect-button">
             CONNECT
         </a>
@@ -730,93 +691,68 @@ PAGE_2 = """
 
 </div>
 
-
-<script>
-
-/*
-   Demo Period Number
-   30 SEC = ഓരോ 30 സെക്കൻഡിലും +1
-   1 MIN  = ഓരോ 60 സെക്കൻഡിലും +1
-
-   ഇപ്പോഴത്തെ page-ൽ default 60 seconds ആണ്.
-*/
-
-
-const START_PERIOD = 20260820100010804;
-
-
-/*
-   URL-ൽ നിന്ന് selected time എടുക്കുന്നു.
-*/
-
-const urlParams =
-    new URLSearchParams(window.location.search);
-
-const selectedTime =
-    parseInt(
-        urlParams.get("time") || "60"
-    );
-
-
-/*
-   Page load ചെയ്ത സമയത്തെ അടിസ്ഥാനമാക്കി
-   period number മാറ്റുന്നു.
-*/
-
-const startTime =
-    Date.now();
-
-
-function updatePeriod() {
-
-    const elapsed =
-        Date.now() - startTime;
-
-
-    const interval =
-        selectedTime * 1000;
-
-
-    const rounds =
-        Math.floor(
-            elapsed / interval
-        );
-
-
-    const newPeriod =
-        START_PERIOD + rounds;
-
-
-    document.getElementById(
-        "periodNumber"
-    ).textContent = newPeriod;
-
-
-}
-
-
-/*
-   ഓരോ second-ലും പരിശോധിക്കുന്നു.
-*/
-
-setInterval(
-    updatePeriod,
-    1000
-);
-
-
-updatePeriod();
-
-</script>
-
-
 </body>
 </html>
 """
 
 
 # =========================================================
-# ROUTES
+# PERIOD NUMBER CALCULATION
+# =========================================================
+
+def get_period_number(seconds):
+
+    """
+    സമയം അടിസ്ഥാനമാക്കി Period Number ഉണ്ടാക്കുന്നു.
+
+    Page refresh ചെയ്താലും നമ്പർ reset ആകില്ല.
+
+    ഉദാഹരണം:
+
+    20260820100010804
+    20260820100010805
+    20260820100010806
+
+    """
+
+    now = datetime.now()
+
+    # YYYYMMDD
+    date_part = now.strftime("%Y%m%d")
+
+    # ഇന്നത്തെ ദിവസത്തിന്റെ midnight മുതൽ കഴിഞ്ഞ seconds
+    midnight = now.replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0
+    )
+
+    elapsed_seconds = int(
+        (now - midnight).total_seconds()
+    )
+
+    # 30 sec / 60 sec round
+    round_number = elapsed_seconds // seconds
+
+    # അവസാന 5 digit
+    last_five = round_number % 100000
+
+    # 5 digit ആയി സൂക്ഷിക്കുന്നു
+    last_five_text = str(last_five).zfill(5)
+
+    # Final period number
+    period_number = (
+        date_part +
+        "1000" +
+        last_five_text
+    )
+
+    return period_number
+
+
+# =========================================================
+# PAGE 1 ROUTE
 # =========================================================
 
 @app.route("/")
@@ -824,6 +760,10 @@ def home():
 
     return render_template_string(PAGE_1)
 
+
+# =========================================================
+# CONNECT
+# =========================================================
 
 @app.route("/connect", methods=["POST"])
 def connect():
@@ -840,6 +780,7 @@ def connect():
     )
 
 
+    # Demo UID
     if uid == "5001":
 
         return redirect(
@@ -856,14 +797,53 @@ def connect():
     )
 
 
+# =========================================================
+# PAGE 2
+# =========================================================
+
 @app.route("/connected")
 def connected():
 
-    return render_template_string(PAGE_2)
+    selected_time = request.args.get(
+        "time",
+        "60"
+    )
+
+
+    try:
+
+        selected_time = int(
+            selected_time
+        )
+
+    except ValueError:
+
+        selected_time = 60
+
+
+    if selected_time not in [30, 60]:
+
+        selected_time = 60
+
+
+    period_number = get_period_number(
+        selected_time
+    )
+
+
+    return render_template_string(
+
+        PAGE_2,
+
+        period_number=period_number,
+
+        selected_time=selected_time
+
+    )
 
 
 # =========================================================
-# START SERVER
+# START
 # =========================================================
 
 if __name__ == "__main__":
