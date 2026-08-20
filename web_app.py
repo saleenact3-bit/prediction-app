@@ -67,8 +67,6 @@ PAGE_1 = """
             letter-spacing: 4px;
         }
 
-        /* TIMER */
-
         .timer {
             margin: 55px auto 0;
 
@@ -116,8 +114,6 @@ PAGE_1 = """
             margin-top: 60px;
             border-top: 2px dashed #08718a;
         }
-
-        /* UID + CONNECT */
 
         .connect-area {
             margin-top: 58px;
@@ -222,8 +218,6 @@ PAGE_1 = """
     </div>
 
 
-    <!-- TIMER -->
-
     <div class="timer">
 
         <button
@@ -246,8 +240,6 @@ PAGE_1 = """
 
     <div class="line"></div>
 
-
-    <!-- CONNECT FORM -->
 
     <form
         action="/connect"
@@ -576,7 +568,7 @@ PAGE_2 = """
         }
 
 
-        .continue-button {
+        .connect-button {
 
             background: #16c1df;
 
@@ -594,7 +586,7 @@ PAGE_2 = """
         }
 
 
-        .continue-button:hover {
+        .connect-button:hover {
 
             background: #31d9f1;
         }
@@ -718,16 +710,16 @@ PAGE_2 = """
     </div>
 
 
-    <!-- CONTINUE + BACK -->
+    <!-- CONNECT + BACK -->
 
     <div class="bottom-buttons">
 
 
         <a
             href="/connected"
-            class="bottom-button continue-button">
+            class="bottom-button connect-button">
 
-            CONTINUE
+            CONNECT
 
         </a>
 
