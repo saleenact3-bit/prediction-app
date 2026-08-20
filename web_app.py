@@ -13,8 +13,11 @@ PAGE_1 = """
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>SIKKIM PRO VIP</title>
 
@@ -61,12 +64,15 @@ body {
 
 .vip {
     padding: 18px 40px;
+
     border: 2px solid #00d9ff;
     border-radius: 25px;
 
     color: #00d9ff;
+
     font-size: 25px;
     font-weight: bold;
+
     letter-spacing: 4px;
 }
 
@@ -82,11 +88,14 @@ body {
     border-radius: 30px;
 
     overflow: hidden;
+
     background: #050e20;
 }
 
 .timer button {
     width: 50%;
+    height: 100%;
+
     border: none;
 
     background: transparent;
@@ -105,6 +114,7 @@ body {
 
 .line {
     margin-top: 60px;
+
     border-top: 2px dashed #08718a;
 }
 
@@ -123,6 +133,7 @@ body {
     height: 125px;
 
     border-radius: 38px;
+
     border: 3px solid #29466d;
 
     background: #040d1e;
@@ -131,6 +142,7 @@ body {
     padding: 0 40px;
 
     font-size: 27px;
+
     outline: none;
 }
 
@@ -158,7 +170,9 @@ body {
 
 .error {
     margin-top: 25px;
+
     text-align: center;
+
     color: #ff6868;
 }
 
@@ -189,11 +203,13 @@ body {
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="main">
+
 
     <div class="top">
 
@@ -208,7 +224,7 @@ body {
     </div>
 
 
-    <!-- TIME SELECT -->
+    <!-- 30 SEC / 1 MIN -->
 
     <div class="timer">
 
@@ -232,8 +248,6 @@ body {
 
     <div class="line"></div>
 
-
-    <!-- UID -->
 
     <form action="/connect" method="POST">
 
@@ -273,6 +287,7 @@ body {
 
     {% endif %}
 
+
 </div>
 
 
@@ -288,6 +303,7 @@ function selectTime(seconds) {
 
     const selected =
         document.getElementById("selectedTime");
+
 
     selected.value = seconds;
 
@@ -325,9 +341,8 @@ PAGE_2 = """
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>SERVER CONNECTED</title>
 
@@ -337,6 +352,7 @@ PAGE_2 = """
 * {
     box-sizing: border-box;
 }
+
 
 body {
 
@@ -372,6 +388,8 @@ body {
 }
 
 
+/* SERVER */
+
 .server-title {
 
     font-size: 42px;
@@ -382,11 +400,25 @@ body {
 }
 
 
+/* LIVE + REMAIN TIME */
+
+.status-row {
+
+    margin-top: 15px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 30px;
+}
+
+
 .live {
 
-    margin-top: 12px;
-
-    font-size: 24px;
+    font-size: 23px;
 
     font-weight: bold;
 }
@@ -396,7 +428,7 @@ body {
 
     color: red;
 
-    font-size: 30px;
+    font-size: 27px;
 
     animation: blink 1s infinite;
 
@@ -422,11 +454,36 @@ body {
 }
 
 
-/* PERIOD NUMBER */
+/* REMAIN TIME */
+
+.remaining {
+
+    font-size: 21px;
+
+    font-weight: bold;
+
+    color: #8fb6df;
+}
+
+
+.remaining-time {
+
+    color: #16c1df;
+
+    font-size: 24px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+
+/* PERIOD BOX */
 
 .period-box {
 
     width: 85%;
+
     max-width: 850px;
 
     height: 110px;
@@ -475,11 +532,12 @@ body {
 }
 
 
-/* N1 N2 */
+/* N1 / N2 */
 
 .number-area {
 
     width: 85%;
+
     max-width: 850px;
 
     margin: auto;
@@ -517,7 +575,6 @@ body {
 .number-input::placeholder {
 
     color: #4d7da5;
-
 }
 
 
@@ -578,10 +635,19 @@ body {
 @media (max-width: 600px) {
 
     .server-title {
+
         font-size: 29px;
     }
 
+    .status-row {
+
+        gap: 15px;
+
+        flex-direction: column;
+    }
+
     .period-box {
+
         width: 95%;
     }
 
@@ -606,6 +672,15 @@ body {
         font-size: 20px;
     }
 
+    .bottom-button {
+
+        width: 145px;
+
+        height: 60px;
+
+        font-size: 18px;
+    }
+
 }
 
 </style>
@@ -624,13 +699,32 @@ body {
     </div>
 
 
-    <div class="live">
+    <!-- LIVE + REMAIN TIME -->
 
-        LIVE
+    <div class="status-row">
 
-        <span class="live-dot">
-            ●
-        </span>
+        <div class="live">
+
+            LIVE
+
+            <span class="live-dot">
+                ●
+            </span>
+
+        </div>
+
+
+        <div class="remaining">
+
+            REMAIN TIME:
+
+            <span
+                class="remaining-time"
+                id="remainingTime">
+                01:00
+            </span>
+
+        </div>
 
     </div>
 
@@ -643,7 +737,9 @@ body {
             PERIOD NUMBER
         </div>
 
-        <div class="period-number">
+        <div
+            class="period-number"
+            id="periodNumber">
             {{ period_number }}
         </div>
 
@@ -658,12 +754,17 @@ body {
             class="number-input"
             type="number"
             placeholder="N1"
+            inputmode="numeric"
+            autocomplete="off"
         >
+
 
         <input
             class="number-input"
             type="number"
             placeholder="N2"
+            inputmode="numeric"
+            autocomplete="off"
         >
 
     </div>
@@ -691,36 +792,163 @@ body {
 
 </div>
 
+
+<script>
+
+
+/*
+    Selected time:
+    30 seconds OR 60 seconds
+*/
+
+const ROUND_SECONDS =
+    {{ selected_time }};
+
+
+/*
+    Server time information.
+
+    ഇതുകൊണ്ട് page refresh ആവശ്യമില്ല.
+*/
+
+let currentPeriod =
+    "{{ period_number }}";
+
+
+/*
+    Period Number-ന്റെ അവസാന 5 digits
+    എടുത്ത് +1 ചെയ്യുന്നു.
+*/
+
+function nextPeriodNumber(period) {
+
+    const text =
+        String(period);
+
+    const prefix =
+        text.slice(0, -5);
+
+    const lastFive =
+        parseInt(
+            text.slice(-5),
+            10
+        );
+
+
+    const nextNumber =
+        lastFive + 1;
+
+
+    const formatted =
+        String(nextNumber)
+        .padStart(5, "0");
+
+
+    return prefix + formatted;
+}
+
+
+/*
+    Countdown.
+*/
+
+function startCountdown() {
+
+    let remaining =
+        ROUND_SECONDS;
+
+
+    function updateTime() {
+
+        const minutes =
+            Math.floor(
+                remaining / 60
+            );
+
+
+        const seconds =
+            remaining % 60;
+
+
+        const display =
+            String(minutes).padStart(2, "0")
+            + ":"
+            + String(seconds).padStart(2, "0");
+
+
+        document.getElementById(
+            "remainingTime"
+        ).textContent = display;
+
+
+        /*
+            00:00 എത്തിയാൽ
+            അടുത്ത Period.
+        */
+
+        if (remaining <= 0) {
+
+            currentPeriod =
+                nextPeriodNumber(
+                    currentPeriod
+                );
+
+
+            document.getElementById(
+                "periodNumber"
+            ).textContent =
+                currentPeriod;
+
+
+            /*
+                പുതിയ round വീണ്ടും തുടങ്ങുന്നു.
+            */
+
+            remaining =
+                ROUND_SECONDS;
+
+        } else {
+
+            remaining--;
+
+        }
+
+    }
+
+
+    updateTime();
+
+
+    setInterval(
+        updateTime,
+        1000
+    );
+
+}
+
+
+startCountdown();
+
+</script>
+
+
 </body>
 </html>
 """
 
 
 # =========================================================
-# PERIOD NUMBER CALCULATION
+# PERIOD NUMBER
 # =========================================================
 
 def get_period_number(seconds):
 
-    """
-    സമയം അടിസ്ഥാനമാക്കി Period Number ഉണ്ടാക്കുന്നു.
-
-    Page refresh ചെയ്താലും നമ്പർ reset ആകില്ല.
-
-    ഉദാഹരണം:
-
-    20260820100010804
-    20260820100010805
-    20260820100010806
-
-    """
-
     now = datetime.now()
 
-    # YYYYMMDD
-    date_part = now.strftime("%Y%m%d")
+    date_part =
+        now.strftime("%Y%m%d")
 
-    # ഇന്നത്തെ ദിവസത്തിന്റെ midnight മുതൽ കഴിഞ്ഞ seconds
+
     midnight = now.replace(
         hour=0,
         minute=0,
@@ -728,59 +956,67 @@ def get_period_number(seconds):
         microsecond=0
     )
 
+
     elapsed_seconds = int(
         (now - midnight).total_seconds()
     )
 
-    # 30 sec / 60 sec round
-    round_number = elapsed_seconds // seconds
 
-    # അവസാന 5 digit
-    last_five = round_number % 100000
+    round_number =
+        elapsed_seconds // seconds
 
-    # 5 digit ആയി സൂക്ഷിക്കുന്നു
-    last_five_text = str(last_five).zfill(5)
 
-    # Final period number
-    period_number = (
-        date_part +
-        "1000" +
-        last_five_text
+    last_five =
+        round_number % 100000
+
+
+    last_five_text =
+        str(last_five).zfill(5)
+
+
+    return (
+        date_part
+        + "1000"
+        + last_five_text
     )
-
-    return period_number
 
 
 # =========================================================
-# PAGE 1 ROUTE
+# HOME
 # =========================================================
 
 @app.route("/")
 def home():
 
-    return render_template_string(PAGE_1)
+    return render_template_string(
+        PAGE_1
+    )
 
 
 # =========================================================
 # CONNECT
 # =========================================================
 
-@app.route("/connect", methods=["POST"])
+@app.route(
+    "/connect",
+    methods=["POST"]
+)
 def connect():
 
-    uid = request.form.get(
-        "uid",
-        ""
-    ).strip()
+    uid =
+        request.form.get(
+            "uid",
+            ""
+        ).strip()
 
 
-    selected_time = request.form.get(
-        "time",
-        "60"
-    )
+    selected_time =
+        request.form.get(
+            "time",
+            "60"
+        )
 
 
-    # Demo UID
     if uid == "5001":
 
         return redirect(
@@ -798,23 +1034,23 @@ def connect():
 
 
 # =========================================================
-# PAGE 2
+# SECOND PAGE
 # =========================================================
 
 @app.route("/connected")
 def connected():
 
-    selected_time = request.args.get(
-        "time",
-        "60"
-    )
+    selected_time =
+        request.args.get(
+            "time",
+            "60"
+        )
 
 
     try:
 
-        selected_time = int(
-            selected_time
-        )
+        selected_time =
+            int(selected_time)
 
     except ValueError:
 
@@ -826,9 +1062,10 @@ def connected():
         selected_time = 60
 
 
-    period_number = get_period_number(
-        selected_time
-    )
+    period_number =
+        get_period_number(
+            selected_time
+        )
 
 
     return render_template_string(
@@ -843,17 +1080,19 @@ def connected():
 
 
 # =========================================================
-# START
+# START SERVER
 # =========================================================
 
 if __name__ == "__main__":
 
-    port = int(
-        os.environ.get(
-            "PORT",
-            5000
+    port =
+        int(
+            os.environ.get(
+                "PORT",
+                5000
+            )
         )
-    )
+
 
     app.run(
         host="0.0.0.0",
