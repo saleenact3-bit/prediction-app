@@ -64,15 +64,12 @@ body {
 
 .vip {
     padding: 18px 40px;
-
     border: 2px solid #00d9ff;
     border-radius: 25px;
 
     color: #00d9ff;
-
     font-size: 25px;
     font-weight: bold;
-
     letter-spacing: 4px;
 }
 
@@ -88,7 +85,6 @@ body {
     border-radius: 30px;
 
     overflow: hidden;
-
     background: #050e20;
 }
 
@@ -114,7 +110,6 @@ body {
 
 .line {
     margin-top: 60px;
-
     border-top: 2px dashed #08718a;
 }
 
@@ -133,7 +128,6 @@ body {
     height: 125px;
 
     border-radius: 38px;
-
     border: 3px solid #29466d;
 
     background: #040d1e;
@@ -142,7 +136,6 @@ body {
     padding: 0 40px;
 
     font-size: 27px;
-
     outline: none;
 }
 
@@ -170,9 +163,7 @@ body {
 
 .error {
     margin-top: 25px;
-
     text-align: center;
-
     color: #ff6868;
 }
 
@@ -210,7 +201,6 @@ body {
 
 <div class="main">
 
-
     <div class="top">
 
         <div class="logo">
@@ -224,7 +214,7 @@ body {
     </div>
 
 
-    <!-- 30 SEC / 1 MIN -->
+    <!-- TIME SELECT -->
 
     <div class="timer">
 
@@ -281,12 +271,11 @@ body {
 
     {% if error %}
 
-    <div class="error">
-        {{ error }}
-    </div>
+        <div class="error">
+            {{ error }}
+        </div>
 
     {% endif %}
-
 
 </div>
 
@@ -295,28 +284,28 @@ body {
 
 function selectTime(seconds) {
 
-    const thirty =
+    const thirtyBtn =
         document.getElementById("thirtyBtn");
 
-    const oneMin =
+    const oneMinBtn =
         document.getElementById("oneMinBtn");
 
-    const selected =
+    const selectedTime =
         document.getElementById("selectedTime");
 
 
-    selected.value = seconds;
+    selectedTime.value = seconds;
 
 
     if (seconds === 30) {
 
-        thirty.classList.add("active");
-        oneMin.classList.remove("active");
+        thirtyBtn.classList.add("active");
+        oneMinBtn.classList.remove("active");
 
     } else {
 
-        oneMin.classList.add("active");
-        thirty.classList.remove("active");
+        oneMinBtn.classList.add("active");
+        thirtyBtn.classList.remove("active");
 
     }
 
@@ -353,7 +342,6 @@ PAGE_2 = """
     box-sizing: border-box;
 }
 
-
 body {
 
     margin: 0;
@@ -387,8 +375,6 @@ body {
     text-align: center;
 }
 
-
-/* SERVER */
 
 .server-title {
 
@@ -454,8 +440,6 @@ body {
 }
 
 
-/* REMAIN TIME */
-
 .remaining {
 
     font-size: 21px;
@@ -478,7 +462,7 @@ body {
 }
 
 
-/* PERIOD BOX */
+/* PERIOD NUMBER */
 
 .period-box {
 
@@ -578,7 +562,7 @@ body {
 }
 
 
-/* BUTTONS */
+/* CONNECT + BACK */
 
 .bottom-buttons {
 
@@ -635,49 +619,36 @@ body {
 @media (max-width: 600px) {
 
     .server-title {
-
         font-size: 29px;
     }
 
     .status-row {
-
         gap: 15px;
-
         flex-direction: column;
     }
 
     .period-box {
-
         width: 95%;
     }
 
     .period-number {
-
         font-size: 24px;
-
         letter-spacing: 4px;
     }
 
     .number-area {
-
         width: 95%;
-
         gap: 12px;
     }
 
     .number-input {
-
         height: 75px;
-
         font-size: 20px;
     }
 
     .bottom-button {
-
         width: 145px;
-
         height: 60px;
-
         font-size: 18px;
     }
 
@@ -746,7 +717,7 @@ body {
     </div>
 
 
-    <!-- N1 / N2 -->
+    <!-- N1 + N2 -->
 
     <div class="number-area">
 
@@ -770,7 +741,7 @@ body {
     </div>
 
 
-    <!-- CONNECT / BACK -->
+    <!-- CONNECT + BACK -->
 
     <div class="bottom-buttons">
 
@@ -795,10 +766,9 @@ body {
 
 <script>
 
-
 /*
-    Selected time:
-    30 seconds OR 60 seconds
+    30 seconds അല്ലെങ്കിൽ
+    60 seconds.
 */
 
 const ROUND_SECONDS =
@@ -806,9 +776,7 @@ const ROUND_SECONDS =
 
 
 /*
-    Server time information.
-
-    ഇതുകൊണ്ട് page refresh ആവശ്യമില്ല.
+    ഇപ്പോഴത്തെ period.
 */
 
 let currentPeriod =
@@ -816,118 +784,161 @@ let currentPeriod =
 
 
 /*
-    Period Number-ന്റെ അവസാന 5 digits
-    എടുത്ത് +1 ചെയ്യുന്നു.
+    അവസാനത്തെ round ID.
 */
 
-function nextPeriodNumber(period) {
+let lastRoundId = null;
 
-    const text =
-        String(period);
+
+/*
+    Period Number +1.
+*/
+
+function getNextPeriod(period) {
 
     const prefix =
-        text.slice(0, -5);
+        period.slice(0, -5);
 
     const lastFive =
         parseInt(
-            text.slice(-5),
+            period.slice(-5),
             10
         );
 
 
-    const nextNumber =
-        lastFive + 1;
+    const nextFive =
+        String(
+            lastFive + 1
+        ).padStart(5, "0");
 
 
-    const formatted =
-        String(nextNumber)
-        .padStart(5, "0");
-
-
-    return prefix + formatted;
+    return prefix + nextFive;
 }
 
 
 /*
-    Countdown.
+    Countdown + Period update.
 */
 
-function startCountdown() {
+function updatePage() {
 
-    let remaining =
-        ROUND_SECONDS;
-
-
-    function updateTime() {
-
-        const minutes =
-            Math.floor(
-                remaining / 60
-            );
+    const now =
+        Date.now();
 
 
-        const seconds =
-            remaining % 60;
+    const roundLength =
+        ROUND_SECONDS * 1000;
 
 
-        const display =
-            String(minutes).padStart(2, "0")
-            + ":"
-            + String(seconds).padStart(2, "0");
+    /*
+        ഇപ്പോഴത്തെ round.
+    */
+
+    const roundId =
+        Math.floor(
+            now / roundLength
+        );
 
 
-        document.getElementById(
-            "remainingTime"
-        ).textContent = display;
+    /*
+        അടുത്ത round വരെ
+        ബാക്കിയുള്ള milliseconds.
+    */
+
+    const nextRound =
+        (roundId + 1) * roundLength;
 
 
-        /*
-            00:00 എത്തിയാൽ
-            അടുത്ത Period.
-        */
-
-        if (remaining <= 0) {
-
-            currentPeriod =
-                nextPeriodNumber(
-                    currentPeriod
-                );
+    const remainingMs =
+        nextRound - now;
 
 
-            document.getElementById(
-                "periodNumber"
-            ).textContent =
-                currentPeriod;
+    let remainingSeconds =
+        Math.ceil(
+            remainingMs / 1000
+        );
 
 
-            /*
-                പുതിയ round വീണ്ടും തുടങ്ങുന്നു.
-            */
+    /*
+        00:00 വരുന്നത് തടയാൻ
+        നേരിട്ട് അടുത്ത period മാറ്റുന്നു.
+    */
 
-            remaining =
-                ROUND_SECONDS;
+    if (remainingSeconds < 1) {
 
-        } else {
-
-            remaining--;
-
-        }
+        remainingSeconds = 1;
 
     }
 
 
-    updateTime();
+    const minutes =
+        Math.floor(
+            remainingSeconds / 60
+        );
 
 
-    setInterval(
-        updateTime,
-        1000
-    );
+    const seconds =
+        remainingSeconds % 60;
 
+
+    const timeText =
+        String(minutes).padStart(2, "0")
+        + ":"
+        + String(seconds).padStart(2, "0");
+
+
+    document.getElementById(
+        "remainingTime"
+    ).textContent = timeText;
+
+
+    /*
+        Round മാറിയാൽ
+        Period Number +1.
+    */
+
+    if (
+        lastRoundId !== null &&
+        roundId !== lastRoundId
+    ) {
+
+        currentPeriod =
+            getNextPeriod(
+                currentPeriod
+            );
+
+
+        document.getElementById(
+            "periodNumber"
+        ).textContent =
+            currentPeriod;
+
+    }
+
+
+    lastRoundId =
+        roundId;
 }
 
 
-startCountdown();
+/*
+    Page തുറന്ന ഉടൻ.
+*/
+
+updatePage();
+
+
+/*
+    ഓരോ 250 milliseconds-ലും
+    check ചെയ്യുന്നു.
+
+    Page refresh ആവശ്യമില്ല.
+*/
+
+setInterval(
+    updatePage,
+    250
+);
 
 </script>
 
@@ -945,9 +956,7 @@ def get_period_number(seconds):
 
     now = datetime.now()
 
-    date_part =
-        now.strftime("%Y%m%d")
-
+    date_part = now.strftime("%Y%m%d")
 
     midnight = now.replace(
         hour=0,
@@ -956,29 +965,29 @@ def get_period_number(seconds):
         microsecond=0
     )
 
-
     elapsed_seconds = int(
         (now - midnight).total_seconds()
     )
 
-
-    round_number =
+    round_number = (
         elapsed_seconds // seconds
+    )
 
-
-    last_five =
+    last_five = (
         round_number % 100000
+    )
 
+    last_five_text = str(
+        last_five
+    ).zfill(5)
 
-    last_five_text =
-        str(last_five).zfill(5)
-
-
-    return (
+    period_number = (
         date_part
         + "1000"
         + last_five_text
     )
+
+    return period_number
 
 
 # =========================================================
@@ -1003,19 +1012,15 @@ def home():
 )
 def connect():
 
-    uid =
-        request.form.get(
-            "uid",
-            ""
-        ).strip()
+    uid = request.form.get(
+        "uid",
+        ""
+    ).strip()
 
-
-    selected_time =
-        request.form.get(
-            "time",
-            "60"
-        )
-
+    selected_time = request.form.get(
+        "time",
+        "60"
+    )
 
     if uid == "5001":
 
@@ -1025,7 +1030,6 @@ def connect():
                 time=selected_time
             )
         )
-
 
     return render_template_string(
         PAGE_1,
@@ -1040,42 +1044,36 @@ def connect():
 @app.route("/connected")
 def connected():
 
-    selected_time =
-        request.args.get(
-            "time",
-            "60"
-        )
-
+    selected_time = request.args.get(
+        "time",
+        "60"
+    )
 
     try:
 
-        selected_time =
-            int(selected_time)
-
-    except ValueError:
-
-        selected_time = 60
-
-
-    if selected_time not in [30, 60]:
-
-        selected_time = 60
-
-
-    period_number =
-        get_period_number(
+        selected_time = int(
             selected_time
         )
 
+    except (ValueError, TypeError):
+
+        selected_time = 60
+
+
+    if selected_time not in (30, 60):
+
+        selected_time = 60
+
+
+    period_number = get_period_number(
+        selected_time
+    )
+
 
     return render_template_string(
-
         PAGE_2,
-
         period_number=period_number,
-
         selected_time=selected_time
-
     )
 
 
@@ -1085,14 +1083,12 @@ def connected():
 
 if __name__ == "__main__":
 
-    port =
-        int(
-            os.environ.get(
-                "PORT",
-                5000
-            )
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
         )
-
+    )
 
     app.run(
         host="0.0.0.0",
