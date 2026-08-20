@@ -254,7 +254,7 @@ body {
                 class="uid-input"
                 type="text"
                 name="uid"
-                placeholder="ENTER SIKKIM UID"
+                placeholder="ENTER KEY"
                 required
             >
 
@@ -766,33 +766,16 @@ body {
 
 <script>
 
-/*
-    30 seconds അല്ലെങ്കിൽ
-    60 seconds.
-*/
-
 const ROUND_SECONDS =
     {{ selected_time }};
 
-
-/*
-    ഇപ്പോഴത്തെ period.
-*/
 
 let currentPeriod =
     "{{ period_number }}";
 
 
-/*
-    അവസാനത്തെ round ID.
-*/
-
 let lastRoundId = null;
 
-
-/*
-    Period Number +1.
-*/
 
 function getNextPeriod(period) {
 
@@ -805,53 +788,33 @@ function getNextPeriod(period) {
             10
         );
 
-
     const nextFive =
         String(
             lastFive + 1
         ).padStart(5, "0");
 
-
     return prefix + nextFive;
 }
 
-
-/*
-    Countdown + Period update.
-*/
 
 function updatePage() {
 
     const now =
         Date.now();
 
-
     const roundLength =
         ROUND_SECONDS * 1000;
-
-
-    /*
-        ഇപ്പോഴത്തെ round.
-    */
 
     const roundId =
         Math.floor(
             now / roundLength
         );
 
-
-    /*
-        അടുത്ത round വരെ
-        ബാക്കിയുള്ള milliseconds.
-    */
-
     const nextRound =
         (roundId + 1) * roundLength;
 
-
     const remainingMs =
         nextRound - now;
-
 
     let remainingSeconds =
         Math.ceil(
@@ -859,15 +822,8 @@ function updatePage() {
         );
 
 
-    /*
-        00:00 വരുന്നത് തടയാൻ
-        നേരിട്ട് അടുത്ത period മാറ്റുന്നു.
-    */
-
     if (remainingSeconds < 1) {
-
         remainingSeconds = 1;
-
     }
 
 
@@ -875,7 +831,6 @@ function updatePage() {
         Math.floor(
             remainingSeconds / 60
         );
-
 
     const seconds =
         remainingSeconds % 60;
@@ -892,11 +847,6 @@ function updatePage() {
     ).textContent = timeText;
 
 
-    /*
-        Round മാറിയാൽ
-        Period Number +1.
-    */
-
     if (
         lastRoundId !== null &&
         roundId !== lastRoundId
@@ -912,7 +862,6 @@ function updatePage() {
             "periodNumber"
         ).textContent =
             currentPeriod;
-
     }
 
 
@@ -921,19 +870,8 @@ function updatePage() {
 }
 
 
-/*
-    Page തുറന്ന ഉടൻ.
-*/
-
 updatePage();
 
-
-/*
-    ഓരോ 250 milliseconds-ലും
-    check ചെയ്യുന്നു.
-
-    Page refresh ആവശ്യമില്ല.
-*/
 
 setInterval(
     updatePage,
@@ -1012,7 +950,7 @@ def home():
 )
 def connect():
 
-    uid = request.form.get(
+    key = request.form.get(
         "uid",
         ""
     ).strip()
@@ -1022,7 +960,9 @@ def connect():
         "60"
     )
 
-    if uid == "5001":
+
+    # Demo key for this interface
+    if key == "5001":
 
         return redirect(
             url_for(
@@ -1031,9 +971,10 @@ def connect():
             )
         )
 
+
     return render_template_string(
         PAGE_1,
-        error="Invalid UID. Please enter 5001."
+        error="Invalid Key. Please try again."
     )
 
 
@@ -1048,6 +989,7 @@ def connected():
         "time",
         "60"
     )
+
 
     try:
 
@@ -1089,6 +1031,7 @@ if __name__ == "__main__":
             5000
         )
     )
+
 
     app.run(
         host="0.0.0.0",
