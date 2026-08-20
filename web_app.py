@@ -25,7 +25,6 @@ PAGE_1 = """
         body {
             margin: 0;
             min-height: 100vh;
-
             background:
                 radial-gradient(
                     circle at 50% 35%,
@@ -33,7 +32,6 @@ PAGE_1 = """
                     #061126 40%,
                     #020817 80%
                 );
-
             color: white;
             font-family: Arial, sans-serif;
         }
@@ -69,35 +67,24 @@ PAGE_1 = """
 
         .timer {
             margin: 55px auto 0;
-
             width: 360px;
             height: 85px;
-
             display: flex;
-
             border: 2px solid #203b63;
             border-radius: 30px;
-
             overflow: hidden;
-
             background: #050e20;
         }
 
         .timer button {
             width: 50%;
             height: 100%;
-
             border: none;
-
             color: #91a6c9;
             background: transparent;
-
             font-size: 23px;
             font-weight: bold;
-
             cursor: pointer;
-
-            transition: 0.2s;
         }
 
         .timer button:hover {
@@ -117,29 +104,21 @@ PAGE_1 = """
 
         .connect-area {
             margin-top: 58px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             gap: 45px;
         }
 
         .uid-input {
             width: 560px;
             height: 125px;
-
             border-radius: 38px;
-
             border: 3px solid #29466d;
-
             background: #040d1e;
             color: white;
-
             padding: 0 40px;
-
             font-size: 27px;
-
             outline: none;
         }
 
@@ -150,26 +129,19 @@ PAGE_1 = """
         .connect-btn {
             width: 325px;
             height: 125px;
-
             border: none;
             border-radius: 38px;
-
             background: #16c1df;
             color: #001018;
-
             font-size: 32px;
             font-weight: 900;
-
             letter-spacing: 5px;
-
             cursor: pointer;
         }
 
         .error {
             margin-top: 25px;
-
             text-align: center;
-
             color: #ff6868;
         }
 
@@ -218,6 +190,8 @@ PAGE_1 = """
     </div>
 
 
+    <!-- 30 SEC / 1 MIN -->
+
     <div class="timer">
 
         <button
@@ -241,10 +215,9 @@ PAGE_1 = """
     <div class="line"></div>
 
 
-    <form
-        action="/connect"
-        method="POST"
-        onsubmit="return saveTime()">
+    <!-- UID -->
+
+    <form action="/connect" method="POST">
 
         <input
             type="hidden"
@@ -275,11 +248,9 @@ PAGE_1 = """
 
 
     {% if error %}
-
         <div class="error">
             {{ error }}
         </div>
-
     {% endif %}
 
 </div>
@@ -298,9 +269,7 @@ function selectTime(seconds) {
     const selected =
         document.getElementById("selectedTime");
 
-
     selected.value = seconds;
-
 
     if (seconds === 30) {
 
@@ -313,13 +282,6 @@ function selectTime(seconds) {
         thirty.classList.remove("active");
 
     }
-}
-
-
-function saveTime() {
-
-    return true;
-
 }
 
 </script>
@@ -439,7 +401,9 @@ PAGE_2 = """
         }
 
 
-        .uid-box {
+        /* PERIOD NUMBER BOX */
+
+        .period-box {
 
             width: 85%;
 
@@ -457,15 +421,37 @@ PAGE_2 = """
 
             display: flex;
 
+            flex-direction: column;
+
             align-items: center;
 
             justify-content: center;
+        }
 
-            font-size: 42px;
+
+        .period-title {
+
+            font-size: 16px;
+
+            color: #6e9bc5;
+
+            margin-bottom: 8px;
+
+            letter-spacing: 2px;
+
+            font-weight: bold;
+        }
+
+
+        .period-number {
+
+            font-size: 38px;
 
             font-weight: bold;
 
-            letter-spacing: 12px;
+            letter-spacing: 8px;
+
+            color: white;
         }
 
 
@@ -615,15 +601,18 @@ PAGE_2 = """
                 font-size: 21px;
             }
 
-            .uid-box {
+            .period-box {
 
                 width: 95%;
 
-                height: 85px;
+                height: 95px;
+            }
 
-                font-size: 30px;
+            .period-number {
 
-                letter-spacing: 8px;
+                font-size: 25px;
+
+                letter-spacing: 5px;
             }
 
             .number-area {
@@ -679,15 +668,26 @@ PAGE_2 = """
     </div>
 
 
-    <div class="uid-box">
-        5001
+    <!-- PERIOD NUMBER -->
+
+    <div class="period-box">
+
+        <div class="period-title">
+            PERIOD NUMBER
+        </div>
+
+        <div
+            class="period-number"
+            id="periodNumber">
+            20260820100010804
+        </div>
+
     </div>
 
 
-    <!-- N1 AND N2 -->
+    <!-- N1 + N2 -->
 
     <div class="number-area">
-
 
         <input
             class="number-input"
@@ -697,7 +697,6 @@ PAGE_2 = """
             autocomplete="off"
         >
 
-
         <input
             class="number-input"
             type="number"
@@ -706,7 +705,6 @@ PAGE_2 = """
             autocomplete="off"
         >
 
-
     </div>
 
 
@@ -714,29 +712,102 @@ PAGE_2 = """
 
     <div class="bottom-buttons">
 
-
         <a
             href="/connected"
             class="bottom-button connect-button">
-
             CONNECT
-
         </a>
 
 
         <a
             href="/"
             class="bottom-button back-button">
-
             BACK
-
         </a>
-
 
     </div>
 
 
 </div>
+
+
+<script>
+
+/*
+   Demo Period Number
+   30 SEC = ഓരോ 30 സെക്കൻഡിലും +1
+   1 MIN  = ഓരോ 60 സെക്കൻഡിലും +1
+
+   ഇപ്പോഴത്തെ page-ൽ default 60 seconds ആണ്.
+*/
+
+
+const START_PERIOD = 20260820100010804;
+
+
+/*
+   URL-ൽ നിന്ന് selected time എടുക്കുന്നു.
+*/
+
+const urlParams =
+    new URLSearchParams(window.location.search);
+
+const selectedTime =
+    parseInt(
+        urlParams.get("time") || "60"
+    );
+
+
+/*
+   Page load ചെയ്ത സമയത്തെ അടിസ്ഥാനമാക്കി
+   period number മാറ്റുന്നു.
+*/
+
+const startTime =
+    Date.now();
+
+
+function updatePeriod() {
+
+    const elapsed =
+        Date.now() - startTime;
+
+
+    const interval =
+        selectedTime * 1000;
+
+
+    const rounds =
+        Math.floor(
+            elapsed / interval
+        );
+
+
+    const newPeriod =
+        START_PERIOD + rounds;
+
+
+    document.getElementById(
+        "periodNumber"
+    ).textContent = newPeriod;
+
+
+}
+
+
+/*
+   ഓരോ second-ലും പരിശോധിക്കുന്നു.
+*/
+
+setInterval(
+    updatePeriod,
+    1000
+);
+
+
+updatePeriod();
+
+</script>
 
 
 </body>
@@ -757,9 +828,17 @@ def home():
 @app.route("/connect", methods=["POST"])
 def connect():
 
-    uid = request.form.get("uid", "").strip()
+    uid = request.form.get(
+        "uid",
+        ""
+    ).strip()
 
-    selected_time = request.form.get("time", "60")
+
+    selected_time = request.form.get(
+        "time",
+        "60"
+    )
+
 
     if uid == "5001":
 
@@ -769,6 +848,7 @@ def connect():
                 time=selected_time
             )
         )
+
 
     return render_template_string(
         PAGE_1,
