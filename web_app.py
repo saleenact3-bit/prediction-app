@@ -540,7 +540,7 @@ PAGE_2 = """
         }
 
 
-        /* CONTINUE + BACK */
+        /* CONNECT + BACK */
 
         .bottom-buttons {
 
